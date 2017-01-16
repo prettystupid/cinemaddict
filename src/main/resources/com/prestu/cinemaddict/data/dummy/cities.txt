@@ -1,0 +1,61 @@
+1	Шанхай	24 150 000 (с сельскими пригородами)[1]	6 340,50	3 809	Flag of the People's Republic of China.svg КНР
+2	Карачи	23 500 000[2]	3 527,00	6 663	Flag of Pakistan.svg Пакистан
+3	Пекин	21 516 000 (с сельскими пригородами)[3]	16 410,54	1 311	Flag of the People's Republic of China.svg КНР
+4	Дели	16 314 838[4]	1 484,00	7 846	Flag of India.svg Индия
+5	Лагос	15 118 780[5]	999,58	17 068	Flag of Nigeria.svg Нигерия
+6	Стамбул	13 854 740[6]	5 461,00	6 467	Flag of Turkey.svg Турция
+7	Гуанчжоу	13 080 500[7]	3 843,43	3 305	Flag of the People's Republic of China.svg КНР
+8	Мумбаи	12 478 447[8]	603,40	20 680	Flag of India.svg Индия
+9	Москва	12 197 596[9]	2 561,50	4 814	Flag of Russia.svg Россия
+10	Дакка	12 043 977	815,80	14 763	Flag of Bangladesh.svg Бангладеш
+11	Каир	11 922 949	3 085,10	3 864	Flag of Egypt.svg Египет
+12	Сан-Паулу	11 895 893	1 521,11	7 762	Flag of Brazil.svg Бразилия
+13	Лахор	11 318 745	1 772,00	3 566	Flag of Pakistan.svg Пакистан
+14	Шэньчжэнь	10 467 400[10]	1 991,64	5 255	Flag of the People's Republic of China.svg КНР
+15	Сеул	10 388 055	605,21	17 164	Flag of South Korea.svg Республика Корея
+16	Джакарта	9 988 329	664,12	15 040	Flag of Indonesia.svg Индонезия
+17	Киншаса	9 735 000[11][12]	1 117,62	8 710	Flag of the Democratic Republic of the Congo.svg Демократическая Республика Конго
+18	Токио	9 375 104[13]	619	15 146	Flag of Japan.svg Япония
+19	Тяньцзинь	9 341 844	4 037,00	2 314	Flag of the People's Republic of China.svg КНР
+20	Мехико	8 874 724	1 485,49	5 974	Flag of Mexico.svg Мексика
+21	Лима	8 693 387	2 672,30	3 253	Flag of Peru (state).svg Перу
+22	Бангалор	8 425 970	709,50	11 876	Flag of India.svg Индия
+23	Лондон	8 416 535	1 572,15	5 354	Flag of the United Kingdom.svg Великобритания
+24	Нью-Йорк	8 405 837	783,84	10 724	Flag of the United States.svg США
+25	Бангкок	8 280 925	1 568,74	5 280	Flag of Thailand.svg Таиланд
+26	Дунгуань	8 220 207	2 469,40	3 329	Flag of the People's Republic of China.svg КНР
+27	Тегеран	8 154 051[14]	686,00	11 886	Flag of Iran.svg Иран
+28	Ахмадабад	8 029 975	475,00	11 727	Flag of India.svg Индия
+29	Богота	7 776 845	859,11	9 052	Flag of Colombia.svg Колумбия
+30	Хошимин	7 681 700	2 095,60	3 667	Flag of Vietnam.svg Вьетнам
+31	Гонконг	7 219 700	1 104,43	6 537	Flag of the People's Republic of China.svg КНР
+32	Багдад	7 180 889	4 555,00	1 577	Flag of Iraq.svg Ирак
+33	Ухань	6 886 253	1 327,61	5 187	Flag of the People's Republic of China.svg КНР
+34	Хайдарабад	6 809 970	621,48	10 958	Flag of India.svg Индия
+35	Ханой	6 844 100	3 323,60	2 059	Flag of Vietnam.svg Вьетнам
+36	Луанда	6 542 944	2 257,00	2 899	Flag of Angola.svg Ангола
+37	Рио-де-Жанейро	6 429 923	1 200,27	5 357	Flag of Brazil.svg Бразилия
+38	Фошань	6 151 622	2 034,62	3 023	Flag of the People's Republic of China.svg КНР
+39	Сантьяго	5 743 719	1 249,90	4 595	Flag of Chile.svg Чили
+40	Эр-Рияд	5 676 621	1 233,98	4 600	Flag of Saudi Arabia.svg Саудовская Аравия
+41	Сингапур	5 399 200	712,40	7 579	Flag of Singapore.svg Сингапур
+42	Шаньтоу	5 391 028	2 064,42	2 611	Flag of the People's Republic of China.svg КНР
+43	Санкт-Петербург	5 225 690	1 439,00	3 631	Flag of Russia.svg Россия
+44	Пуна	5 049 968	450,69	6 913	Flag of India.svg Индия
+45	Анкара	5 045 083	1 910,92	2 282	Flag of Turkey.svg Турция
+46	Ченнаи	4 792 949	426,51	21 057	Flag of India.svg Индия
+47	Абиджан	4 765 000	2 119,00	2 249	Flag of Côte d'Ivoire.svg Кот-д’Ивуар
+48	Чэнду	4 741 929	421,00	11 260	Flag of the People's Republic of China.svg КНР
+49	Янгон	4 714 000	598,75	7 873	Flag of Myanmar.svg Мьянма
+50	Александрия	4 616 625	2 300,00	2 007	Flag of Egypt.svg Египет
+51	Чунцин	4 513 137	1 435,07	3 145	Flag of the People's Republic of China.svg КНР
+52	Калькутта	4 486 679	200,70	24 252	Flag of India.svg Индия
+53	Сиань	4 467 837	832,17	5 388	Flag of the People's Republic of China.svg КНР
+54	Сурат	4 462 002	326,52	13 666	Flag of India.svg Индия
+55	Йоханнесбург	4 434 827	1 644,98	2 696	Flag of South Africa.svg ЮАР
+56	Нанкин	4 393 857	742,85	5 915	Flag of the People's Republic of China.svg КНР
+57	Дар-эс-Салам	4 364 541	1 631,12	2 676	Flag of Tanzania.svg Танзания
+58	Сучжоу (Цзянсу)	4 327 066	1 649,72	2 526	Flag of the People's Republic of China.svg КНР
+59	Харбин	4 280 701	1 718,20	2 491	Flag of the People's Republic of China.svg КНР
+60	Гиза	4 239 988	289,08	14 667	Flag of Egypt.svg Египет
+61	Чжэнчжоу	4 122 087	1 015,66	4 059	Flag of the People's Republic of China.svg КНР
