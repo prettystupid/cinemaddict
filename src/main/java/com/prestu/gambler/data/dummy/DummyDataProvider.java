@@ -312,7 +312,7 @@ public class DummyDataProvider implements DataProvider {
     }
 
     @Override
-    public User authenticate(String userName, String password) {
+    public User authenticate(String userName, int password) {
         User user = new User();
         user.setFirstName(DummyDataGenerator.randomFirstName());
         user.setLastName(DummyDataGenerator.randomLastName());

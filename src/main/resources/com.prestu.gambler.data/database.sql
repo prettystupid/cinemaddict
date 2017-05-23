@@ -1,0 +1,21 @@
+CREATE SCHEMA IF NOT EXISTS gambler;
+
+USE gambler;
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users
+(
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  username VARCHAR(255) NOT NULL,
+  password INT,
+  firstname VARCHAR(255) DEFAULT '',
+  lastname VARCHAR(255) DEFAULT '',
+  sex TINYINT DEFAULT 0 NOT NULL,
+  email VARCHAR(255) DEFAULT '',
+  city VARCHAR(255) DEFAULT '',
+  site VARCHAR(255) DEFAULT '',
+  about VARCHAR(1024) DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO users VALUES (1, 'admin', 689486176, '', '', 0, '', '', '', '');

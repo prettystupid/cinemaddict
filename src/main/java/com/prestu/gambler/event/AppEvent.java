@@ -5,20 +5,21 @@ import com.prestu.gambler.view.ViewType;
 public abstract class AppEvent {
 
     public static final class UserLoginRequestedEvent {
-        private final String userName, password;
+        private String userName;
+        private int passwordHash;
 
         public UserLoginRequestedEvent(final String userName,
-                final String password) {
+                final int passwordHash) {
             this.userName = userName;
-            this.password = password;
+            this.passwordHash = passwordHash;
         }
 
         public String getUserName() {
             return userName;
         }
 
-        public String getPassword() {
-            return password;
+        public int getPasswordHash() {
+            return passwordHash;
         }
     }
 

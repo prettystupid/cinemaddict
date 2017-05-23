@@ -13,7 +13,7 @@ public interface DataProvider {
     Collection<Transaction> getRecentTransactions(int count);
     Collection<MovieRevenue> getDailyRevenuesByMovie(long id);
     Collection<MovieRevenue> getTotalMovieRevenues();
-    User authenticate(String userName, String password);
+    User authenticate(String userName, int password);
     Collection<Movie> getMovies();
     Movie getMovie(long movieId);
     Collection<Transaction> getTransactionsBetween(Date startDate, Date endDate);

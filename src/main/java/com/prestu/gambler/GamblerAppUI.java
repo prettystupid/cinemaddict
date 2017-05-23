@@ -63,7 +63,7 @@ public class GamblerAppUI extends UI {
     @Subscribe
     public void userLoginRequested(final AppEvent.UserLoginRequestedEvent event) {
         User user = getDataProvider().authenticate(event.getUserName(),
-                event.getPassword());
+                event.getPasswordHash());
         VaadinSession.getCurrent().setAttribute(User.class.getName(), user);
         updateContent();
     }

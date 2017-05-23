@@ -1,6 +1,8 @@
 package com.prestu.gambler.domain;
 
-public final class User {
+public class User implements Entity {
+
+    private long id;
     private String role;
     private String firstName;
     private String lastName;
@@ -13,11 +15,19 @@ public final class User {
     private String website;
     private String bio;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(final String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -25,7 +35,7 @@ public final class User {
         return location;
     }
 
-    public void setLocation(final String location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -33,7 +43,7 @@ public final class User {
         return phone;
     }
 
-    public void setPhone(final String phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -41,7 +51,7 @@ public final class User {
         return newsletterSubscription;
     }
 
-    public void setNewsletterSubscription(final Integer newsletterSubscription) {
+    public void setNewsletterSubscription(Integer newsletterSubscription) {
         this.newsletterSubscription = newsletterSubscription;
     }
 
@@ -49,7 +59,7 @@ public final class User {
         return website;
     }
 
-    public void setWebsite(final String website) {
+    public void setWebsite(String website) {
         this.website = website;
     }
 
@@ -57,7 +67,7 @@ public final class User {
         return bio;
     }
 
-    public void setBio(final String bio) {
+    public void setBio(String bio) {
         this.bio = bio;
     }
 
@@ -65,7 +75,7 @@ public final class User {
         return male;
     }
 
-    public void setMale(final boolean male) {
+    public void setMale(boolean male) {
         this.male = male;
     }
 
@@ -73,7 +83,7 @@ public final class User {
         return title;
     }
 
-    public void setTitle(final String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -81,7 +91,7 @@ public final class User {
         return role;
     }
 
-    public void setRole(final String role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -89,7 +99,7 @@ public final class User {
         return firstName;
     }
 
-    public void setFirstName(final String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
@@ -97,7 +107,7 @@ public final class User {
         return lastName;
     }
 
-    public void setLastName(final String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
