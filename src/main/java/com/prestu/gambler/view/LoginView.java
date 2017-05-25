@@ -2,6 +2,8 @@ package com.prestu.gambler.view;
 
 import com.prestu.gambler.event.AppEvent;
 import com.prestu.gambler.event.AppEventBus;
+import com.prestu.gambler.exceptions.UserExistsException;
+import com.prestu.gambler.utils.Notifications;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -95,6 +97,7 @@ public class LoginView extends VerticalLayout {
             @Override
             public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
                 register.setEnabled(username.isValid() && password.isValid());
+                register.setDisableOnClick(!(username.isValid() && password.isValid()));
             }
         };
 
@@ -103,31 +106,20 @@ public class LoginView extends VerticalLayout {
         register.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
-
-                // TODO: 23.05.2017  
-//                AppEventBus.post(new AppEvent.UserLoginRequestedEvent(username
-//                        .getValue(), password.hashCode()));
-                Notification notification = new Notification("Добро пожаловать на GAMBLER");
-                notification.setDescription("<span>Регистрация прошла успешно</span>");
-                notification.setHtmlContentAllowed(true);
-                notification.setStyleName("tray dark small closable login-help");
-                notification.setPosition(Position.BOTTOM_CENTER);
-                notification.setDelayMsec(20000);
-                notification.show(Page.getCurrent());
-                popupLoginForm();
+                AppEventBus.post(new AppEvent.UserRegisteredEvent(username.getValue(), password.getValue().hashCode(), firstName.getValue(),
+                        lastName.getValue(), email.getValue()));
             }
         });
-
         fields.addComponents(username, firstName, lastName, email, password, register);
         return fields;
     }
 
-    private void popupRegistrationForm() {
+    public void popupRegistrationForm() {
         if (registrationForm == null) registrationForm = buildRegistrationForm();
         replaceComponent(loginForm, registrationForm);
     }
 
-    private void popupLoginForm() {
+    public void popupLoginForm() {
         replaceComponent(registrationForm, loginForm);
     }
 
@@ -165,8 +157,7 @@ public class LoginView extends VerticalLayout {
         signin.addClickListener(new ClickListener() {
             @Override
             public void buttonClick(final ClickEvent event) {
-                AppEventBus.post(new AppEvent.UserLoginRequestedEvent(username
-                        .getValue(), password.hashCode()));
+                AppEventBus.post(new AppEvent.UserLoginRequestedEvent(username.getValue(), password.getValue().hashCode()));
             }
         });
         signup.addClickListener(new ClickListener() {

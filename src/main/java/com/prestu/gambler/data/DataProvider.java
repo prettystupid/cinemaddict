@@ -14,6 +14,9 @@ public interface DataProvider {
     Collection<MovieRevenue> getDailyRevenuesByMovie(long id);
     Collection<MovieRevenue> getTotalMovieRevenues();
     User authenticate(String userName, int password);
+    void registerUser(String userName, int passwordHash, String firstName, String lastName, String email);
+    void updateUser(User user);
+    void logOutUser(String username);
     Collection<Movie> getMovies();
     Movie getMovie(long movieId);
     Collection<Transaction> getTransactionsBetween(Date startDate, Date endDate);

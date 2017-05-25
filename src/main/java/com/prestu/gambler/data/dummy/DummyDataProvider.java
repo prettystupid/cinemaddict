@@ -12,16 +12,24 @@ import com.prestu.gambler.domain.Movie;
 import com.prestu.gambler.domain.MovieRevenue;
 import com.prestu.gambler.domain.Transaction;
 import com.prestu.gambler.domain.User;
+import com.prestu.gambler.exceptions.AuthenticException;
+import com.prestu.gambler.exceptions.UserExistsException;
+import com.prestu.gambler.exceptions.UserIsOnlineException;
+import com.prestu.gambler.utils.Notifications;
 import com.prestu.gambler.utils.Translit;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.util.CurrentInstance;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.XMLConfiguration;
 
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 public class DummyDataProvider implements DataProvider {
 
@@ -36,6 +44,39 @@ public class DummyDataProvider implements DataProvider {
     private static Multimap<Long, MovieRevenue> revenue;
 
     private static Random rand = new Random();
+
+    protected Connection getConnection() throws SQLException {
+        XMLConfiguration config;
+        try {
+            config = new XMLConfiguration();
+            config.load(DummyDataProvider.class.getResourceAsStream("config.xml"));
+        } catch (ConfigurationException e) {
+            throw new RuntimeException("Config is not found");
+        }
+
+        String url = new StringBuilder("jdbc:mysql://localhost:3306/").append(config.getString("db-name")).append("?useSSL=false&serverTimezone=UTC").toString();
+        return DriverManager.getConnection(url, config.getString("username"), config.getString("password"));
+    }
+
+    protected PreparedStatement createPreparedStatement(Connection connection, String query) throws SQLException {
+        return connection.prepareStatement(query);
+    }
+
+    protected ResultSet getResultSet(PreparedStatement preparedStatement) throws SQLException {
+        return preparedStatement.executeQuery();
+    }
+
+    protected void close(ResultSet resultSet, PreparedStatement statement, Connection connection) throws SQLException {
+        if (resultSet != null) {
+            resultSet.close();
+        }
+        if (statement != null) {
+            statement.close();
+        }
+        if (connection != null) {
+            connection.close();
+        }
+    }
 
     public DummyDataProvider() {
         Calendar cal = Calendar.getInstance();
@@ -313,16 +354,100 @@ public class DummyDataProvider implements DataProvider {
 
     @Override
     public User authenticate(String userName, int password) {
+        User user = getUserByName(userName, password);
+        return user;
+    }
+
+    @Override
+    public void registerUser(String userName, int passwordHash, String firstName, String lastName, String email) {
+        try {
+            Connection connection = getConnection();
+            PreparedStatement statement = createPreparedStatement(connection, "INSERT INTO `users` (`username`, `password`, `firstname`, `lastname`, `email`) VALUES (?, ?, ?, ?, ?);");
+            statement.setString(1, userName);
+            statement.setInt(2, passwordHash);
+            statement.setString(3, firstName);
+            statement.setString(4, lastName);
+            statement.setString(5, email);
+            statement.execute();
+            close(null, statement, connection);
+            Notifications.show("Добро пожаловать на GAMBLER", "Регистрация прошла успешно", Notifications.SMALL_WINDOW);
+        } catch (SQLIntegrityConstraintViolationException duplicateEx) {
+            throw new UserExistsException();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            Notifications.show("Ошибка", "Повторите попытку", Notifications.SMALL_WINDOW);
+        }
+    }
+
+    @Override
+    public void updateUser(User user) {
+        try {
+            Connection connection = getConnection();
+            String query = "UPDATE `users` SET firstname = ?, lastname = ?, email = ?, male = ?, city = ?, site = ?, bio = ? WHERE username = ?";
+            PreparedStatement statement = createPreparedStatement(connection, query);
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getEmail());
+            statement.setBoolean(4, user.isMale());
+            statement.setString(5, user.getCity());
+            statement.setString(6, user.getWebsite());
+            statement.setString(7, user.getBio());
+            statement.setString(8, user.getUsername());
+            statement.execute();
+            close(null, statement, connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void logOutUser(String username) {
+        updateUserActivity(false, username);
+    }
+
+    private void updateUserActivity(boolean online, String username) {
+        try {
+            Connection connection = getConnection();
+            String query = "UPDATE `users` SET online = ? WHERE username = ?";
+            PreparedStatement statement = createPreparedStatement(connection, query);
+            statement.setBoolean(1, online);
+            statement.setString(2, username);
+            statement.execute();
+            close(null, statement, connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private User getUserByName(String username, int password) throws AuthenticException {
         User user = new User();
-        user.setFirstName(DummyDataGenerator.randomFirstName());
-        user.setLastName(DummyDataGenerator.randomLastName());
-        user.setRole("admin");
-        String email = Translit.cyr2lat(user.getFirstName()) + "."
-                + Translit.cyr2lat(user.getLastName()) + "@"
-                + DummyDataGenerator.randomCompanyName().toLowerCase() + ".com";
-        user.setEmail(email.replaceAll(" ", ""));
-        user.setLocation(DummyDataGenerator.randomWord(5, true));
-        user.setBio("");
+        try {
+            Connection connection = getConnection();
+            String query = "SELECT * FROM `users` WHERE username = ?";
+            PreparedStatement statement = createPreparedStatement(connection, query);
+            statement.setString(1, username);
+            ResultSet resultSet = getResultSet(statement);
+            if (!resultSet.next() || resultSet.getInt("password") != password) {
+                throw new AuthenticException();
+            } else if (resultSet.getBoolean("online")) {
+                throw new UserIsOnlineException();
+            } else {
+                user.setId(resultSet.getLong("id"));
+                user.setUsername(resultSet.getString("username"));
+                user.setFirstName(resultSet.getString("firstname"));
+                user.setLastName(resultSet.getString("lastname"));
+                user.setMale(resultSet.getBoolean("male"));
+                user.setCity(resultSet.getString("city"));
+                user.setEmail(resultSet.getString("email"));
+                user.setWebsite("site");
+                user.setBio(resultSet.getString("bio"));
+            }
+            close(resultSet, statement, connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return user;
+        }
+        updateUserActivity(true, user.getUsername());
         return user;
     }
 

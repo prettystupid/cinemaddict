@@ -81,7 +81,7 @@ public final class MainMenu extends CustomComponent {
         settingsItem.addItem("Выйти", new Command() {
             @Override
             public void menuSelected(final MenuItem selectedItem) {
-                AppEventBus.post(new AppEvent.UserLoggedOutEvent());
+                AppEventBus.post(new AppEvent.UserLoggedOutEvent(getCurrentUser().getUsername()));
             }
         });
         return settings;

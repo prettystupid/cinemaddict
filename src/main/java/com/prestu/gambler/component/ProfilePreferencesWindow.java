@@ -3,6 +3,7 @@ package com.prestu.gambler.component;
 import com.prestu.gambler.domain.User;
 import com.prestu.gambler.event.AppEvent;
 import com.prestu.gambler.event.AppEventBus;
+import com.prestu.gambler.utils.Notifications;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
@@ -25,22 +26,18 @@ public class ProfilePreferencesWindow extends Window {
     private TextField firstNameField;
     @PropertyId("lastName")
     private TextField lastNameField;
-    @PropertyId("title")
-    private ComboBox titleField;
     @PropertyId("male")
     private OptionGroup sexField;
     @PropertyId("email")
     private TextField emailField;
-    @PropertyId("location")
+    @PropertyId("city")
     private TextField locationField;
-    @PropertyId("phone")
-    private TextField phoneField;
-    @PropertyId("newsletterSubscription")
-    private OptionalSelect<Integer> newsletterField;
     @PropertyId("website")
     private TextField websiteField;
     @PropertyId("bio")
     private TextArea bioField;
+
+    private User user;
 
     private ProfilePreferencesWindow(final User user,
             final boolean preferencesTabOpen) {
@@ -51,7 +48,7 @@ public class ProfilePreferencesWindow extends Window {
         setModal(true);
         setCloseShortcut(KeyCode.ESCAPE, null);
         setResizable(false);
-        setClosable(false);
+        setClosable(true);
         setHeight(90.0f, Unit.PERCENTAGE);
 
         VerticalLayout content = new VerticalLayout();
@@ -74,6 +71,8 @@ public class ProfilePreferencesWindow extends Window {
         }
 
         content.addComponent(buildFooter());
+
+        this.user = user;
 
         fieldGroup = new BeanFieldGroup<User>(User.class);
         fieldGroup.bindMemberFields(this);
@@ -121,9 +120,9 @@ public class ProfilePreferencesWindow extends Window {
 
         sexField = new OptionGroup("Пол");
         sexField.addItem(Boolean.FALSE);
-        sexField.setItemCaption(Boolean.FALSE, "Мужской");
+        sexField.setItemCaption(Boolean.TRUE, "Мужской");
         sexField.addItem(Boolean.TRUE);
-        sexField.setItemCaption(Boolean.TRUE, "Женский");
+        sexField.setItemCaption(Boolean.FALSE, "Женский");
         sexField.addStyleName("horizontal");
         details.addComponent(sexField);
 
@@ -145,24 +144,13 @@ public class ProfilePreferencesWindow extends Window {
                 "Город не найден"));
         details.addComponent(locationField);
 
-        phoneField = new TextField("Телефон");
-        phoneField.setWidth("100%");
-        phoneField.setNullRepresentation("");
-        details.addComponent(phoneField);
-
-        newsletterField = new OptionalSelect<Integer>();
-        newsletterField.addOption(0, "Ежедневно");
-        newsletterField.addOption(1, "Еженедельно");
-        newsletterField.addOption(2, "Ежемесячно");
-        details.addComponent(newsletterField);
-
         section = new Label("Другая информация");
         section.addStyleName(ValoTheme.LABEL_H4);
         section.addStyleName(ValoTheme.LABEL_COLORED);
         details.addComponent(section);
 
         websiteField = new TextField("Сайт");
-        websiteField.setInputPrompt("http://");
+        websiteField.setInputPrompt("https://");
         websiteField.setWidth("100%");
         websiteField.setNullRepresentation("");
         details.addComponent(websiteField);
@@ -188,21 +176,13 @@ public class ProfilePreferencesWindow extends Window {
             public void buttonClick(ClickEvent event) {
                 try {
                     fieldGroup.commit();
-
-                    Notification success = new Notification(
-                            "Профиль успешно обновлен");
-                    success.setDelayMsec(2000);
-                    success.setStyleName("bar success small");
-                    success.setPosition(Position.BOTTOM_CENTER);
-                    success.show(Page.getCurrent());
-
-                    AppEventBus.post(new AppEvent.ProfileUpdatedEvent());
+                    Notifications.show("Профиль успешно обновлен", "", Notifications.BOTTOM_PANEL);
+                    AppEventBus.post(new AppEvent.ProfileUpdatedEvent(user));
                     close();
                 } catch (CommitException e) {
                     Notification.show("Ошибка при обновлении профиля",
                             Type.ERROR_MESSAGE);
                 }
-
             }
         });
         ok.focus();

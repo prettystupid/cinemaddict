@@ -3,15 +3,12 @@ package com.prestu.gambler.domain;
 public class User implements Entity {
 
     private long id;
-    private String role;
+    private String username;
     private String firstName;
     private String lastName;
-    private String title;
     private boolean male;
     private String email;
-    private String location;
-    private String phone;
-    private Integer newsletterSubscription;
+    private String city;
     private String website;
     private String bio;
 
@@ -31,28 +28,20 @@ public class User implements Entity {
         this.email = email;
     }
 
-    public String getLocation() {
-        return location;
+    public String getUsername() {
+        return username;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getCity() {
+        return city;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Integer getNewsletterSubscription() {
-        return newsletterSubscription;
-    }
-
-    public void setNewsletterSubscription(Integer newsletterSubscription) {
-        this.newsletterSubscription = newsletterSubscription;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getWebsite() {
@@ -71,30 +60,6 @@ public class User implements Entity {
         this.bio = bio;
     }
 
-    public boolean isMale() {
-        return male;
-    }
-
-    public void setMale(boolean male) {
-        this.male = male;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -111,4 +76,11 @@ public class User implements Entity {
         this.lastName = lastName;
     }
 
+    public boolean isMale() {
+        return male;
+    }
+
+    public void setMale(boolean male) {
+        this.male = male;
+    }
 }
