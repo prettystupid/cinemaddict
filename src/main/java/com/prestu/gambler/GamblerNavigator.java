@@ -9,77 +9,47 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewProvider;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.UI;
-import org.vaadin.googleanalytics.tracking.GoogleAnalyticsTracker;
 
 public class GamblerNavigator extends Navigator {
 
-    private static final String TRACKER_ID = null;
-    private GoogleAnalyticsTracker tracker;
-
-    private static final ViewType ERROR_VIEW = ViewType.TRANSACTIONS;
+    private static final ViewType ERROR_VIEW = ViewType.TETRIS;
     private ViewProvider errorViewProvider;
 
-    public GamblerNavigator(final ComponentContainer container) {
+    public GamblerNavigator(ComponentContainer container) {
         super(UI.getCurrent(), container);
 
-        String host = getUI().getPage().getLocation().getHost();
-        if (TRACKER_ID != null && host.endsWith("demo.vaadin.com")) {
-            initGATracker(TRACKER_ID);
-        }
         initViewChangeListener();
         initViewProviders();
 
-    }
-
-    private void initGATracker(final String trackerId) {
-        tracker = new GoogleAnalyticsTracker(trackerId, "demo.vaadin.com");
-
-        tracker.extend(UI.getCurrent());
     }
 
     private void initViewChangeListener() {
         addViewChangeListener(new ViewChangeListener() {
 
             @Override
-            public boolean beforeViewChange(final ViewChangeEvent event) {
+            public boolean beforeViewChange(ViewChangeEvent event) {
                 return true;
             }
 
             @Override
-            public void afterViewChange(final ViewChangeEvent event) {
-                ViewType view = ViewType.getByViewName(event
-                        .getViewName());
+            public void afterViewChange(ViewChangeEvent event) {
+                ViewType view = ViewType.getByViewName(event.getViewName());
                 AppEventBus.post(new AppEvent.PostViewChangeEvent(view));
                 AppEventBus.post(new AppEvent.BrowserResizeEvent());
                 AppEventBus.post(new AppEvent.CloseOpenWindowsEvent());
-
-                if (tracker != null) {
-                    tracker.trackPageview("/gambler/" + event.getViewName());
-                }
             }
         });
     }
 
     private void initViewProviders() {
-        for (final ViewType viewType : ViewType.values()) {
-            ViewProvider viewProvider = new ClassBasedViewProvider(
-                    viewType.getViewName(), viewType.getViewClass()) {
-
-                private View cachedInstance;
+        for (ViewType viewType : ViewType.values()) {
+            ViewProvider viewProvider = new ClassBasedViewProvider(viewType.getViewName(), viewType.getViewClass()) {
 
                 @Override
-                public View getView(final String viewName) {
+                public View getView(String viewName) {
                     View result = null;
                     if (viewType.getViewName().equals(viewName)) {
-                        if (viewType.isStateful()) {
-                            if (cachedInstance == null) {
-                                cachedInstance = super.getView(viewType
-                                        .getViewName());
-                            }
-                            result = cachedInstance;
-                        } else {
-                            result = super.getView(viewType.getViewName());
-                        }
+                        result = super.getView(viewType.getViewName());
                     }
                     return result;
                 }
@@ -94,12 +64,12 @@ public class GamblerNavigator extends Navigator {
 
         setErrorProvider(new ViewProvider() {
             @Override
-            public String getViewName(final String viewAndParameters) {
+            public String getViewName(String viewAndParameters) {
                 return ERROR_VIEW.getViewName();
             }
 
             @Override
-            public View getView(final String viewName) {
+            public View getView(String viewName) {
                 return errorViewProvider.getView(ERROR_VIEW.getViewName());
             }
         });

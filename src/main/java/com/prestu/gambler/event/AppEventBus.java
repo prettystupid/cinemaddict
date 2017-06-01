@@ -9,21 +9,20 @@ public class AppEventBus implements SubscriberExceptionHandler {
 
     private final EventBus eventBus = new EventBus(this);
 
-    public static void post(final Object event) {
+    public static void post(Object event) {
         GamblerAppUI.getGamblerEventbus().eventBus.post(event);
     }
 
-    public static void register(final Object object) {
+    public static void register(Object object) {
         GamblerAppUI.getGamblerEventbus().eventBus.register(object);
     }
 
-    public static void unregister(final Object object) {
+    public static void unregister(Object object) {
         GamblerAppUI.getGamblerEventbus().eventBus.unregister(object);
     }
 
     @Override
-    public final void handleException(final Throwable exception,
-            final SubscriberExceptionContext context) {
+    public void handleException(Throwable exception, SubscriberExceptionContext context) {
         exception.printStackTrace();
     }
 }

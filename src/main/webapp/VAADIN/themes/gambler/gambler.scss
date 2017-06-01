@@ -2,10 +2,8 @@
 @import "common";
 @import "views/login";
 @import "views/gamblerview";
-@import "views/schedule";
-@import "views/sales";
-@import "views/transactions";
-@import "views/reports";
+@import "views/game";
+@import "views/rating";
 
 $v-included-components: remove($v-included-components, accordion);
 $v-included-components: remove($v-included-components, colorpicker);
@@ -27,8 +25,6 @@ $valo-menu-background-color: #414B56;
   @include gambler-common;
   @include gambler-login-view;
   @include gambler-gambler-view;
-  @include gambler-schedule-view;
-  @include gambler-sales-view;
-  @include gambler-transactions-view;
-  @include gambler-reports-view;
+  @include gambler-game-view;
+  @include gambler-rating-view;
 }

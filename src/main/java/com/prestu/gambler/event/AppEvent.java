@@ -1,11 +1,12 @@
 package com.prestu.gambler.event;
 
 import com.prestu.gambler.domain.User;
+import com.prestu.gambler.games.Game;
 import com.prestu.gambler.view.ViewType;
 
 public abstract class AppEvent {
 
-    public static final class UserLoginRequestedEvent {
+    public static class UserLoginRequestedEvent {
         private String userName;
         private int passwordHash;
 
@@ -23,7 +24,7 @@ public abstract class AppEvent {
         }
     }
 
-    public static final class UserRegisteredEvent {
+    public static class UserRegisteredEvent {
         private String userName;
         private int passwordHash;
         private String firstName;
@@ -75,10 +76,10 @@ public abstract class AppEvent {
         }
     }
 
-    public static final class PostViewChangeEvent {
-        private final ViewType view;
+    public static class PostViewChangeEvent {
+        private ViewType view;
 
-        public PostViewChangeEvent(final ViewType view) {
+        public PostViewChangeEvent(ViewType view) {
             this.view = view;
         }
 
@@ -88,6 +89,25 @@ public abstract class AppEvent {
     }
 
     public static class CloseOpenWindowsEvent {
+    }
+
+    public static class EndGameEvent {
+
+        private Long gameId;
+        private int score;
+
+        public EndGameEvent(Long gameId, int score) {
+            this.gameId = gameId;
+            this.score = score;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public Long getGameId() {
+            return gameId;
+        }
     }
 
     public static class ProfileUpdatedEvent {

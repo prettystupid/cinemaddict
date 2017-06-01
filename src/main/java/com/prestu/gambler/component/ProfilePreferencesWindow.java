@@ -7,9 +7,9 @@ import com.prestu.gambler.utils.Notifications;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.fieldgroup.PropertyId;
+import com.vaadin.event.MouseEvents;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.*;
-import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
@@ -19,9 +19,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class ProfilePreferencesWindow extends Window {
 
-    public static final String ID = "profilepreferenceswindow";
-
-    private final BeanFieldGroup<User> fieldGroup;
+    private BeanFieldGroup<User> fieldGroup;
     @PropertyId("firstName")
     private TextField firstNameField;
     @PropertyId("lastName")
@@ -36,17 +34,17 @@ public class ProfilePreferencesWindow extends Window {
     private TextField websiteField;
     @PropertyId("bio")
     private TextArea bioField;
+    private Image profilePic;
 
     private User user;
 
-    private ProfilePreferencesWindow(final User user,
-            final boolean preferencesTabOpen) {
+    private ProfilePreferencesWindow(User user) {
         addStyleName("profile-window");
-        setId(ID);
         Responsive.makeResponsive(this);
 
+        this.user = user;
         setModal(true);
-        setCloseShortcut(KeyCode.ESCAPE, null);
+        addCloseShortcut(KeyCode.ESCAPE, null);
         setResizable(false);
         setClosable(true);
         setHeight(90.0f, Unit.PERCENTAGE);
@@ -66,15 +64,9 @@ public class ProfilePreferencesWindow extends Window {
 
         detailsWrapper.addComponent(buildProfileTab());
 
-        if (preferencesTabOpen) {
-            detailsWrapper.setSelectedTab(1);
-        }
-
         content.addComponent(buildFooter());
 
-        this.user = user;
-
-        fieldGroup = new BeanFieldGroup<User>(User.class);
+        fieldGroup = new BeanFieldGroup<>(User.class);
         fieldGroup.bindMemberFields(this);
         fieldGroup.setItemDataSource(user);
     }
@@ -92,15 +84,14 @@ public class ProfilePreferencesWindow extends Window {
         VerticalLayout pic = new VerticalLayout();
         pic.setSizeUndefined();
         pic.setSpacing(true);
-        Image profilePic = new Image(null, new ThemeResource(
-                "img/profile-pic-300px.jpg"));
-        profilePic.setWidth(100.0f, Unit.PIXELS);
+        profilePic = new Image();
+        setProfilePic(user.getLogo());
         pic.addComponent(profilePic);
 
         Button upload = new Button("Изменить…", new ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Notification.show("В процессе:)");
+                popupLogoSelectWindow();
             }
         });
         upload.addStyleName(ValoTheme.BUTTON_TINY);
@@ -133,15 +124,12 @@ public class ProfilePreferencesWindow extends Window {
 
         emailField = new TextField("Email");
         emailField.setWidth("100%");
-        emailField.setRequired(true);
         emailField.setNullRepresentation("");
         details.addComponent(emailField);
 
         locationField = new TextField("Город");
         locationField.setWidth("100%");
         locationField.setNullRepresentation("");
-        locationField.setComponentError(new UserError(
-                "Город не найден"));
         details.addComponent(locationField);
 
         section = new Label("Другая информация");
@@ -162,6 +150,17 @@ public class ProfilePreferencesWindow extends Window {
         details.addComponent(bioField);
 
         return root;
+    }
+
+    private void setProfilePic(ThemeResource resource) {
+        profilePic.setSource(resource);
+        profilePic.setWidth(100.0f, Unit.PIXELS);
+    }
+
+    private void popupLogoSelectWindow() {
+        Window w = new LogoSelectWindow();
+        UI.getCurrent().addWindow(w);
+        w.focus();
     }
 
     private Component buildFooter() {
@@ -191,10 +190,45 @@ public class ProfilePreferencesWindow extends Window {
         return footer;
     }
 
-    public static void open(final User user, final boolean preferencesTabActive) {
+    public static void open(User user) {
         AppEventBus.post(new AppEvent.CloseOpenWindowsEvent());
-        Window w = new ProfilePreferencesWindow(user, preferencesTabActive);
+        Window w = new ProfilePreferencesWindow(user);
         UI.getCurrent().addWindow(w);
         w.focus();
+    }
+
+    private class LogoSelectWindow extends Window {
+
+        LogoSelectWindow() {
+            Responsive.makeResponsive(this);
+            setModal(true);
+            GridLayout content = new GridLayout(5, 4);
+            content.setSpacing(true);
+            content.setMargin(true);
+            setContent(content);
+
+            int i = 0, j = 0;
+            for (int logoNum = 0; logoNum < 17; logoNum++) {
+                String path = "img/logo/logo" + logoNum + ".jpg";
+                ThemeResource logo = new ThemeResource(path);
+                Image pic = new Image(null, logo);
+                pic.setWidth(100.0f, Unit.PIXELS);
+                pic.addClickListener(new MouseEvents.ClickListener() {
+                    @Override
+                    public void click(MouseEvents.ClickEvent clickEvent) {
+                        user.setLogo(logo);
+                        setProfilePic(logo);
+                        LogoSelectWindow.this.close();
+                    }
+                });
+                content.addComponent(pic, i, j);
+                if (i == 4) {
+                    i = 0;
+                    j++;
+                } else {
+                    i++;
+                }
+            }
+        }
     }
 }

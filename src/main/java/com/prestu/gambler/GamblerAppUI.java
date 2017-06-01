@@ -4,7 +4,7 @@ import javax.servlet.annotation.WebServlet;
 
 import com.google.common.eventbus.Subscribe;
 import com.prestu.gambler.data.DataProvider;
-import com.prestu.gambler.data.dummy.DummyDataProvider;
+import com.prestu.gambler.data.GamblerDataProvider;
 import com.prestu.gambler.domain.User;
 import com.prestu.gambler.event.AppEvent;
 import com.prestu.gambler.event.AppEventBus;
@@ -14,7 +14,9 @@ import com.prestu.gambler.exceptions.UserIsOnlineException;
 import com.prestu.gambler.utils.Notifications;
 import com.prestu.gambler.view.LoginView;
 import com.prestu.gambler.view.MainView;
+import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.*;
 import com.vaadin.ui.Notification;
@@ -22,13 +24,12 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@Push
 @Theme("gambler")
+@Title("Gambler")
 public class GamblerAppUI extends UI {
 
-    private final DataProvider dataProvider = new DummyDataProvider();
+    private final DataProvider dataProvider = new GamblerDataProvider();
     private final AppEventBus appEventbus = new AppEventBus();
 
     @Override
@@ -44,7 +45,7 @@ public class GamblerAppUI extends UI {
                 new Page.BrowserWindowResizeListener() {
                     @Override
                     public void browserWindowResized(
-                            final Page.BrowserWindowResizeEvent event) {
+                            Page.BrowserWindowResizeEvent event) {
                         AppEventBus.post(new AppEvent.BrowserResizeEvent());
                     }
                 });
@@ -69,10 +70,11 @@ public class GamblerAppUI extends UI {
     }
 
     @Subscribe
-    public void userLoginRequested(final AppEvent.UserLoginRequestedEvent event) {
+    public void userLoginRequested(AppEvent.UserLoginRequestedEvent event) {
         User user;
         try {
             user = getDataProvider().authenticate(event.getUserName(), event.getPasswordHash());
+            OnlineUsersObserver.getInstance().userSignIn(user);
         } catch (AuthenticException | UserIsOnlineException ex) {
             Notifications.show("Ошибка", ex.getMessage(), Notification.Type.ERROR_MESSAGE.getStyle());
             return;
@@ -84,7 +86,7 @@ public class GamblerAppUI extends UI {
     }
 
     @Subscribe
-    public void userRegistered(final AppEvent.UserRegisteredEvent event) {
+    public void userRegistered(AppEvent.UserRegisteredEvent event) {
         try {
             getDataProvider().registerUser(event.getUserName(), event.getPasswordHash(), event.getFirstName(), event.getLastName(), event.getEmail());
             ((LoginView) getContent()).popupLoginForm();
@@ -94,19 +96,25 @@ public class GamblerAppUI extends UI {
     }
 
     @Subscribe
-    public void profileUpdated(final AppEvent.ProfileUpdatedEvent event) {
+    public void profileUpdated(AppEvent.ProfileUpdatedEvent event) {
         getDataProvider().updateUser(event.getUser());
     }
 
     @Subscribe
-    public void userLoggedOut(final AppEvent.UserLoggedOutEvent event) {
-        getDataProvider().logOutUser(event.getUsername());
+    public void userLoggedOut(AppEvent.UserLoggedOutEvent event) {
+        OnlineUsersObserver.getInstance().userSignOut((User) VaadinSession.getCurrent().getAttribute(User.class.getName()));
         VaadinSession.getCurrent().close();
         Page.getCurrent().reload();
     }
 
     @Subscribe
-    public void closeOpenWindows(final AppEvent.CloseOpenWindowsEvent event) {
+    public void saveScore(AppEvent.EndGameEvent event) {
+        getDataProvider().saveScore(((User) VaadinSession.getCurrent().getAttribute(User.class.getName())).getId(),
+                event.getGameId(), event.getScore());
+    }
+
+    @Subscribe
+    public void closeOpenWindows(AppEvent.CloseOpenWindowsEvent event) {
         for (Window window : getWindows()) {
             window.close();
         }

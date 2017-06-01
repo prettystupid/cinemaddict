@@ -1,6 +1,8 @@
 package com.prestu.gambler.domain;
 
-public class User implements Entity {
+import com.vaadin.server.ThemeResource;
+
+public class User {
 
     private long id;
     private String username;
@@ -11,6 +13,7 @@ public class User implements Entity {
     private String city;
     private String website;
     private String bio;
+    private ThemeResource logo;
 
     public long getId() {
         return id;
@@ -82,5 +85,18 @@ public class User implements Entity {
 
     public void setMale(boolean male) {
         this.male = male;
+    }
+
+    public void setLogo(ThemeResource logo) {
+        this.logo = logo;
+    }
+
+    public ThemeResource getLogo() {
+        return logo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof User) && (((User) o).getUsername().equals(username));
     }
 }

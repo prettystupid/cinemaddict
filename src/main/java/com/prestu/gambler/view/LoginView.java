@@ -33,7 +33,7 @@ public class LoginView extends VerticalLayout {
     }
 
     private Component buildLoginForm() {
-        final VerticalLayout loginPanel = new VerticalLayout();
+        VerticalLayout loginPanel = new VerticalLayout();
         loginPanel.setSizeUndefined();
         loginPanel.setSpacing(true);
         Responsive.makeResponsive(loginPanel);
@@ -93,6 +93,10 @@ public class LoginView extends VerticalLayout {
         register.setClickShortcut(KeyCode.ENTER);
         register.focus();
 
+        Button backToLogIn = new Button("Назад");
+        backToLogIn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        backToLogIn.setClickShortcut(KeyCode.ENTER);
+
         Property.ValueChangeListener validUserPassListener = new Property.ValueChangeListener() {
             @Override
             public void valueChange(Property.ValueChangeEvent valueChangeEvent) {
@@ -105,12 +109,19 @@ public class LoginView extends VerticalLayout {
         password.addValueChangeListener(validUserPassListener);
         register.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(final ClickEvent event) {
+            public void buttonClick(ClickEvent event) {
                 AppEventBus.post(new AppEvent.UserRegisteredEvent(username.getValue(), password.getValue().hashCode(), firstName.getValue(),
                         lastName.getValue(), email.getValue()));
             }
         });
-        fields.addComponents(username, firstName, lastName, email, password, register);
+
+        backToLogIn.addClickListener(new ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent clickEvent) {
+                popupLoginForm();
+            }
+        });
+        fields.addComponents(username, firstName, lastName, email, password, register, backToLogIn);
         return fields;
     }
 
@@ -156,13 +167,13 @@ public class LoginView extends VerticalLayout {
 
         signin.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(final ClickEvent event) {
+            public void buttonClick(ClickEvent event) {
                 AppEventBus.post(new AppEvent.UserLoginRequestedEvent(username.getValue(), password.getValue().hashCode()));
             }
         });
         signup.addClickListener(new ClickListener() {
             @Override
-            public void buttonClick(final ClickEvent event) {
+            public void buttonClick(ClickEvent event) {
                 popupRegistrationForm();
             }
         });

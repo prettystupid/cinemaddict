@@ -16,15 +16,13 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.themes.ValoTheme;
 
-public final class MainMenu extends CustomComponent {
+public class MainMenu extends CustomComponent {
 
-    private static final String ID = "gambler-menu";
     private static final String STYLE_VISIBLE = "valo-menu-visible";
     private MenuItem settingsItem;
 
     MainMenu() {
         setPrimaryStyleName("valo-menu");
-        setId(ID);
         setSizeUndefined();
 
         AppEventBus.register(this);
@@ -33,7 +31,7 @@ public final class MainMenu extends CustomComponent {
     }
 
     private Component buildContent() {
-        final CssLayout menuContent = new CssLayout();
+        CssLayout menuContent = new CssLayout();
         menuContent.addStyleName("sidebar");
         menuContent.addStyleName(ValoTheme.MENU_PART);
         menuContent.addStyleName("no-vertical-drag-hints");
@@ -65,22 +63,21 @@ public final class MainMenu extends CustomComponent {
     }
 
     private Component buildUserMenu() {
-        final MenuBar settings = new MenuBar();
+        MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
         final User user = getCurrentUser();
-        settingsItem = settings.addItem("", new ThemeResource(
-                "img/profile-pic-300px.jpg"), null);
-        updateUserName(null);
+        settingsItem = settings.addItem("", new ThemeResource("img/logo/logo0.jpg"), null);
+        updateUserNameAndLogo(null);
         settingsItem.addItem("Редактировать", new Command() {
             @Override
-            public void menuSelected(final MenuItem selectedItem) {
-                ProfilePreferencesWindow.open(user, false);
+            public void menuSelected(MenuItem selectedItem) {
+                ProfilePreferencesWindow.open(user);
             }
         });
         settingsItem.addSeparator();
         settingsItem.addItem("Выйти", new Command() {
             @Override
-            public void menuSelected(final MenuItem selectedItem) {
+            public void menuSelected(MenuItem selectedItem) {
                 AppEventBus.post(new AppEvent.UserLoggedOutEvent(getCurrentUser().getUsername()));
             }
         });
@@ -90,7 +87,7 @@ public final class MainMenu extends CustomComponent {
     private Component buildToggleButton() {
         Button valoMenuToggleButton = new Button("Menu", new ClickListener() {
             @Override
-            public void buttonClick(final ClickEvent event) {
+            public void buttonClick(ClickEvent event) {
                 if (getCompositionRoot().getStyleName().contains(STYLE_VISIBLE)) {
                     getCompositionRoot().removeStyleName(STYLE_VISIBLE);
                 } else {
@@ -109,7 +106,7 @@ public final class MainMenu extends CustomComponent {
         CssLayout menuItemsLayout = new CssLayout();
         menuItemsLayout.addStyleName("valo-menuitems");
 
-        for (final ViewType view : ViewType.values()) {
+        for (ViewType view : ViewType.values()) {
             Component menuItemComponent = new ValoMenuItemButton(view);
 
             menuItemsLayout.addComponent(menuItemComponent);
@@ -124,21 +121,22 @@ public final class MainMenu extends CustomComponent {
     }
 
     @Subscribe
-    public void updateUserName(final AppEvent.ProfileUpdatedEvent event) {
+    public void updateUserNameAndLogo(AppEvent.ProfileUpdatedEvent event) {
         User user = getCurrentUser();
-        settingsItem.setText(user.getFirstName() + " " + user.getLastName());
+        settingsItem.setText(user.getUsername());
+        settingsItem.setIcon(user.getLogo());
     }
 
-    public final class ValoMenuItemButton extends Button {
+    public class ValoMenuItemButton extends Button {
 
-        ValoMenuItemButton(final ViewType view) {
+        ValoMenuItemButton(ViewType view) {
             setPrimaryStyleName("valo-menu-item");
             setIcon(view.getIcon());
             setCaption(view.getCaption());
             AppEventBus.register(this);
             addClickListener(new ClickListener() {
                 @Override
-                public void buttonClick(final ClickEvent event) {
+                public void buttonClick(ClickEvent event) {
                     UI.getCurrent().getNavigator()
                             .navigateTo(view.getViewName());
                 }

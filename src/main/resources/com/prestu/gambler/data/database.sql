@@ -1,0 +1,45 @@
+SET FOREIGN_KEY_CHECKS=0;
+
+CREATE SCHEMA IF NOT EXISTS gambler;
+
+USE gambler;
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users
+(
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  username VARCHAR(255) UNIQUE KEY NOT NULL,
+  password INT,
+  firstname VARCHAR(255) DEFAULT '',
+  lastname VARCHAR(255) DEFAULT '',
+  male TINYINT DEFAULT 0 NOT NULL,
+  email VARCHAR(255) DEFAULT '',
+  city VARCHAR(255) DEFAULT '',
+  site VARCHAR(255) DEFAULT '',
+  bio VARCHAR(1024) DEFAULT '',
+  logo_path VARCHAR(255) DEFAULT 'img/logo/logo0.jpg'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS games;
+
+CREATE TABLE games
+(
+  id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  gamename VARCHAR(255) UNIQUE KEY NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO games VALUES (1, 'Тетрис'), (2, 'Змейка');
+
+DROP TABLE IF EXISTS scores;
+
+CREATE TABLE scores (
+  game_id INT NOT NULL,
+  user_id INT NOT NULL,
+  score INT NOT NULL,
+  PRIMARY KEY (game_id, user_id),
+  FOREIGN KEY (game_id) REFERENCES games (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO users VALUES (1, 'admin', 689486176, '', '', 1, '', '', '', '', 'img/logo/logo0.jpg');
