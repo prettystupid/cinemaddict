@@ -8,6 +8,8 @@ import com.prestu.gambler.utils.Notifications;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.ui.UI;
+import org.vaadin.hezamu.canvas.*;
+import org.vaadin.hezamu.canvas.Canvas;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -62,12 +64,14 @@ public class Snake extends Game {
         snake.add(new Point(2, 0));
         snake.add(new Point(3, 0));
 
-        generateFruit(snake.get(snake.size() - 1));
-
+        score = 0;
+        gameOver = false;
+        direction = 1;
         canvas.setWidth((dimension.getTileSize() * dimension.getWidth()) + "px");
         canvas.setHeight((dimension.getTileSize() * dimension.getHeight()) + "px");
         canvas.setFillStyle(BACKGROUND);
         canvas.fillRect(0, 0, dimension.getWidth() * dimension.getTileSize() + 2, dimension.getHeight() * dimension.getTileSize() + 2);
+        generateFruit(snake.get(snake.size() - 1));
     }
 
     @Override
@@ -165,7 +169,8 @@ public class Snake extends Game {
         }
     }
 
-    private synchronized void draw() {
+    private
+    synchronized void draw() {
         UI.getCurrent().access(() -> {
             canvas.setFillStyle(BACKGROUND);
             int tileSize = dimension.getTileSize();
@@ -186,12 +191,12 @@ public class Snake extends Game {
 
     @Override
     protected void endGame() {
-        canvas.setFillStyle(BACKGROUND);
-        canvas.fillRect(0, 0, dimension.getWidth() * dimension.getTileSize() + 2, dimension.getHeight() * dimension.getTileSize() + 2);
         running = false;
         Notifications.show("Ваш счет " + score, "", Notifications.BOTTOM_PANEL);
         saveScore();
         startEndGame.setCaption("Начать");
+        canvas.setFillStyle(BACKGROUND);
+        canvas.fillRect(0, 0, dimension.getWidth() * dimension.getTileSize() + 2, dimension.getHeight() * dimension.getTileSize() + 2);
     }
 
     @Override

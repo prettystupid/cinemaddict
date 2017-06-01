@@ -1,10 +1,6 @@
 package com.prestu.gambler.games.tetris;
 
-import com.prestu.gambler.games.Grid;
-
 public class Tetromino extends Grid {
-
-	private static String LABELS = "IJLOSTZ";
 
 	private static String COLORS[] = new String[] { "#0ff", "#00f", "#ffa500",
 			"#ff0", "#0f0", "#800080", "#f00" };
@@ -89,10 +85,6 @@ public class Tetromino extends Grid {
 			return ALL[type - 1];
 		}
 		return null;
-	}
-
-	public static Tetromino get(char letter) {
-		return get(LABELS.indexOf(letter));
 	}
 
 	public static Tetromino getRandom() {

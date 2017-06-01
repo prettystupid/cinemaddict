@@ -1,4 +1,4 @@
-package com.prestu.gambler.games;
+package com.prestu.gambler.games.tetris;
 
 public class Grid {
 
@@ -46,22 +46,6 @@ public class Grid {
 				rotated[i][j] = grid[j][s - i];
 			}
 		}
-		grid = rotated;
-		int tmp = grid_w;
-		grid_w = grid_h;
-		grid_h = tmp;
-	}
-
-	public void rotateCCW() {
-		int rotated[][] = new int[grid_h][grid_w];
-
-		int s = grid_w - 1;
-		for (int i = 0; i < grid_h; i++) {
-			for (int j = 0; j < grid_w; j++) {
-				rotated[i][j] = grid[s - j][i];
-			}
-		}
-
 		grid = rotated;
 		int tmp = grid_w;
 		grid_w = grid_h;

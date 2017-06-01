@@ -3,7 +3,6 @@ package com.prestu.gambler.games.tetris;
 import com.prestu.gambler.component.DifficultSelector;
 import com.prestu.gambler.games.Game;
 import com.prestu.gambler.games.GameDimension;
-import com.prestu.gambler.games.Grid;
 import com.prestu.gambler.utils.Notifications;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
